@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrestaVecino - Herramientas entre vecinos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <button class="icon-btn" id="btnBack" aria-label="Volver" hidden>&#8592;</button>
+      <a href="#" class="brand" data-nav="home">
+        <svg class="brand__logo" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M16 3 2 15h4v13h8v-8h4v8h8V15h4z" fill="#fff"/>
+          <circle cx="16" cy="14" r="2.6" fill="#1e3a8a"/>
+        </svg>
+        <span>PrestaVecino</span>
+      </a>
+      <nav class="menu" id="menu" aria-label="Menú principal">
+        <a href="#" data-nav="home">Inicio</a>
+        <a href="#" data-nav="tools">Herramientas</a>
+        <a href="#" data-nav="publish">Publicar</a>
+        <a href="#" data-nav="loan">Mis préstamos</a>
+        <a href="#" data-nav="notifications">Notificaciones <span class="badge" id="notifBadge" hidden>0</span></a>
+        <a href="#" id="btnLogout" hidden>Cerrar sesión</a>
+      </nav>
+      <button class="icon-btn" id="btnMenu" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. Inicio -->
+    <section class="view" data-view="home">
+      <div class="hero">
+        <div class="hero__text">
+          <h1>PrestaVecino</h1>
+          <h2>Herramientas entre vecinos, siempre cerca de ti</h2>
+          <p>Presta, usa y devuelve.<br>De forma segura y en tu barrio.</p>
+        </div>
+        <div class="hero__img" aria-hidden="true">🔧</div>
+      </div>
+      <div class="stack">
+        <button class="btn btn--primary" data-nav="login" data-mode="login">Iniciar sesión</button>
+        <button class="btn btn--outline" data-nav="login" data-mode="register">Crear cuenta</button>
+      </div>
+      <ul class="features">
+        <li><span>🛡️</span>Seguro</li>
+        <li><span>👥</span>Comunidad</li>
+        <li><span>🤝</span>Confianza</li>
+      </ul>
+    </section>
+
+    <!-- 2. Inicio de sesión -->
+    <section class="view" data-view="login">
+      <div class="card card--narrow">
+        <h1 id="loginTitle" class="center">Iniciar sesión</h1>
+        <p id="loginSub" class="center muted">Accede a tu cuenta</p>
+        <form id="loginForm" novalidate>
+          <label class="field" id="nameField" hidden>
+            <span class="field__icon">👤</span>
+            <input type="text" id="name" placeholder="Nombre y apartamento" autocomplete="name">
+          </label>
+          <label class="field">
+            <span class="field__icon">✉️</span>
+            <input type="email" id="email" placeholder="Correo electrónico" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span class="field__icon">🔒</span>
+            <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" required minlength="4">
+            <button type="button" class="field__toggle" id="togglePass" aria-label="Mostrar contraseña">👁️</button>
+          </label>
+          <p class="form-error" id="loginError" role="alert" hidden></p>
+          <button type="submit" class="btn btn--primary" id="loginSubmit">Entrar</button>
+        </form>
+        <div class="divider"><span>o</span></div>
+        <button class="btn btn--outline" id="btnGoogle"><b class="g">G</b> Continuar con Google</button>
+        <p class="center small"><a href="#" id="forgot">¿Olvidaste tu contraseña?</a></p>
+        <p class="center small"><a href="#" id="switchMode">¿No tienes cuenta? Crear cuenta</a></p>
+      </div>
+    </section>
+
+    <!-- 3. Selección de herramientas -->
+    <section class="view" data-view="tools">
+      <label class="search">
+        <span>🔍</span>
+        <input type="search" id="search" placeholder="Buscar por herramienta o zona...">
+      </label>
+      <div class="chips" id="chips" role="tablist">
+        <button class="chip is-active" data-cat="Todas">Todas</button>
+        <button class="chip" data-cat="Construcción">Construcción</button>
+        <button class="chip" data-cat="Jardinería">Jardinería</button>
+        <button class="chip" data-cat="Hogar">Hogar</button>
+      </div>
+      <button class="btn btn--outline btn--sm" data-nav="publish" style="margin-bottom:14px">+ Publicar mi herramienta</button>
+      <h2 id="toolsTitle" class="section-title" hidden>Mis favoritos</h2>
+      <div class="tool-list" id="toolList"></div>
+      <p class="muted center" id="toolsEmpty" hidden>No encontramos herramientas con ese filtro.</p>
+    </section>
+
+    <!-- 4. Detalle de herramienta -->
+    <section class="view" data-view="detail">
+      <article class="detail" id="detailBox"></article>
+    </section>
+
+    <!-- Publicar herramienta -->
+    <section class="view" data-view="publish">
+      <div class="card card--narrow">
+        <h1 class="center">Publicar herramienta</h1>
+        <p class="center muted">Compártela con tus vecinos</p>
+        <form id="publishForm" novalidate>
+          <label class="field">
+            <span class="field__icon">🔧</span>
+            <input type="text" id="pName" placeholder="Nombre de la herramienta" required>
+          </label>
+          <label class="field">
+            <span class="field__icon">🏷️</span>
+            <select id="pCat" aria-label="Categoría">
+              <option>Construcción</option>
+              <option>Jardinería</option>
+              <option>Hogar</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__icon">💲</span>
+            <input type="number" id="pPrice" min="0" step="500" placeholder="Precio por día (COP)" required>
+          </label>
+          <label class="field">
+            <span class="field__icon">🛡️</span>
+            <input type="number" id="pDeposit" min="0" step="1000" placeholder="Depósito de garantía (COP)" required>
+          </label>
+          <label class="field">
+            <span class="field__icon">📅</span>
+            <input type="text" id="pAvail" placeholder="Disponibilidad (ej: Lun - Mié)">
+          </label>
+          <label class="field">
+            <span class="field__icon">🖼️</span>
+            <select id="pIcon" aria-label="Ícono">
+              <option value="🔧">🔧 Herramienta eléctrica</option>
+              <option value="🔨">🔨 Herramienta manual</option>
+              <option value="🪜">🪜 Escalera</option>
+              <option value="🌿">🌿 Jardinería</option>
+              <option value="🚿">🚿 Riego</option>
+              <option value="🧹">🧹 Limpieza</option>
+              <option value="🪚">🪚 Corte</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field__icon">📝</span>
+            <textarea id="pDesc" rows="3" placeholder="Descripción y estado"></textarea>
+          </label>
+          <p class="form-error" id="publishError" role="alert" hidden></p>
+          <button type="submit" class="btn btn--primary">Publicar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 5. Confirmación de solicitud -->
+    <section class="view" data-view="confirm">
+      <div class="card card--narrow center">
+        <div class="check">✓</div>
+        <h1>¡Solicitud enviada!</h1>
+        <p class="muted">Tu solicitud de préstamo ha sido registrada correctamente.</p>
+        <div class="summary" id="confirmBox"></div>
+        <button class="btn btn--primary" data-nav="loan">Ver mis préstamos</button>
+      </div>
+    </section>
+
+    <!-- 6. Notificaciones -->
+    <section class="view" data-view="notifications">
+      <div class="row-between">
+        <h1 class="section-title">Notificaciones</h1>
+        <button class="link-btn" id="clearNotifs">🗑️ Borrar todas</button>
+      </div>
+      <ul class="notifs" id="notifList"></ul>
+      <p class="muted center" id="notifEmpty" hidden>No tienes notificaciones.</p>
+    </section>
+
+    <!-- 7. Préstamo activo -->
+    <section class="view" data-view="loan">
+      <h1 class="section-title">Tu préstamo activo</h1>
+      <div id="loanBox"></div>
+    </section>
+
+    <!-- 8. Confirmación de devolución -->
+    <section class="view" data-view="returned">
+      <div class="card card--narrow center">
+        <div class="check">✓</div>
+        <h1>¡Devolución registrada!</h1>
+        <p class="muted">Gracias por usar PrestaVecino.<br>Esperamos verte pronto.</p>
+        <button class="btn btn--primary" data-nav="home">Volver al inicio</button>
+        <div class="houses" aria-hidden="true">🏘️</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación inferior (móvil) -->
+  <nav class="tabbar" id="tabbar" aria-label="Navegación" hidden>
+    <button data-nav="tools" data-tab="tools"><span>🏠</span>Inicio</button>
+    <button data-nav="favorites" data-tab="favorites"><span>♡</span>Mis favoritos</button>
+    <button data-nav="loan" data-tab="loan"><span>☰</span>Mis préstamos</button>
+    <button data-nav="notifications" data-tab="notifications"><span>🔔</span>Notificaciones</button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
